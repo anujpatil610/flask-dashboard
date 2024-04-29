@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ZAGIMORE Retail Store Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='plotly-latest.min.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ZAGIMORE Retail Store Dashboard</h1>
+            <p>Welcome to the interactive dashboard</p>
+        </header>
+        
+        <section class="visualization">
+            <h2>Data Visualization</h2>
+            <!-- Placeholder for Sales Distribution by Product Category -->
+            <div class="plot-container">
+                <h3>Sales Distribution by Product Category</h3>
+                <div id="sales-category-graph" class="plot"></div>
+            </div>
+
+            <!-- Placeholder for Store Performance Comparison -->
+            <div class="plot-container">
+                <h3>Store Performance Comparison</h3>
+                <div id="store-performance-graph" class="plot"></div>
+            </div>
+
+            <!-- Placeholder for Store Revenue Heatmap -->
+            <div class="plot-container">
+                <h3>Store Revenue Heatmap</h3>
+                <div id="store-revenue-heatmap" class="plot"></div>
+            </div>
+        </section>
+
+        <section class="filters">
+            <h2>Filter Data</h2>
+            <form action="/store_revenue" method="post">
+                <label for="store_key">Select a Store:</label>
+                <select name="store_key" id="store_key">
+                    <option value="">Please Select</option>
+                    {% for store in stores %}
+                    <option value="{{ store.StoreKey }}">{{ store.StoreID }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Update Store Revenue">
+            </form>
+
+            <form action="/customer_revenue" method="post">
+                <label for="customer_name">Select a Customer:</label>
+                <select name="customer_name" id="customer_name">
+                    <option value="">Please Select</option>
+                    {% for customer in customers %}
+                    <option value="{{ customer.CustomerName }}">{{ customer.CustomerName }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Update Customer Revenue">
+            </form>
+        </section>
+    </div>
+
+    <script>
+        // JavaScript code for rendering Plotly graphs
+        var salesCategoryData = {{ category_data | safe }};
+        var storePerformanceData = {{ store_performance_data | safe }};
+        var heatmapData = {{ heatmap_data | safe }};
+    
+        // Function to render Sales Distribution by Product Category graph
+        function renderSalesCategoryGraph() {
+            var salesCategoryGraphData = []; // Data for the graph
+            var categoryNames = []; // Category names for labels
+            var totalRevenue = []; // Total revenue for each category
+    
+            // Extract data from salesCategoryData and populate arrays
+            salesCategoryData.forEach(function(item) {
+                categoryNames.push(item.CategoryName);
+                totalRevenue.push(item.TotalRevenue);
+            });
+    
+            // Define the trace for the bar chart
+            var trace = {
+                x: categoryNames,
+                y: totalRevenue,
+                type: 'bar'
+            };
+    
+            // Add trace to the graph data
+            salesCategoryGraphData.push(trace);
+    
+            // Define the layout for the graph
+            var layout = {
+                title: 'Sales Distribution by Product Category',
+                xaxis: {
+                    title: 'Product Category'
+                },
+                yaxis: {
+                    title: 'Total Revenue'
+                }
+            };
+    
+            // Render the graph
+            Plotly.newPlot('sales-category-graph', salesCategoryGraphData, layout);
+        }
+    
+        // Function to render Store Performance Comparison graph
+        function renderStorePerformanceGraph() {
+            var storePerformanceGraphData = []; // Data for the graph
+            var storeIDs = []; // Store IDs for labels
+            var totalRevenue = []; // Total revenue for each store
+    
+            // Extract data from storePerformanceData and populate arrays
+            storePerformanceData.forEach(function(item) {
+                storeIDs.push(item.StoreID);
+                totalRevenue.push(item.TotalRevenue);
+            });
+    
+            // Define the trace for the bar chart
+            var trace = {
+                x: storeIDs,
+                y: totalRevenue,
+                type: 'bar'
+            };
+    
+            // Add trace to the graph data
+            storePerformanceGraphData.push(trace);
+    
+            // Define the layout for the graph
+            var layout = {
+                title: 'Store Performance Comparison',
+                xaxis: {
+                    title: 'Store ID'
+                },
+                yaxis: {
+                    title: 'Total Revenue'
+                }
+            };
+    
+            // Render the graph
+            Plotly.newPlot('store-performance-graph', storePerformanceGraphData, layout);
+        }
+    
+        // Function to render Store Revenue Heatmap graph
+        function renderStoreRevenueHeatmap() {
+            var storeRevenueHeatmapData = []; // Data for the heatmap
+            var regionNames = []; // Region names for labels
+            var storeIDs = []; // Store IDs for labels
+            var totalRevenue = []; // Total revenue for each store
+    
+            // Extract data from heatmapData and populate arrays
+            heatmapData.forEach(function(item) {
+                regionNames.push(item.RegionName);
+                storeIDs.push(item.StoreID);
+                totalRevenue.push(item.TotalRevenue);
+            });
+    
+            // Define the trace for the heatmap
+            var trace = {
+                x: storeIDs,
+                y: regionNames,
+                z: totalRevenue,
+                type: 'heatmap'
+            };
+    
+            // Add trace to the graph data
+            storeRevenueHeatmapData.push(trace);
+    
+            // Define the layout for the heatmap
+            var layout = {
+                title: 'Store Revenue Heatmap',
+                xaxis: {
+                    title: 'Store ID'
+                },
+                yaxis: {
+                    title: 'Region Name'
+                }
+            };
+    
+            // Render the heatmap
+            Plotly.newPlot('store-revenue-heatmap', storeRevenueHeatmapData, layout);
+        }
+    
+        // Call the rendering functions
+        renderSalesCategoryGraph();
+        renderStorePerformanceGraph();
+        renderStoreRevenueHeatmap();
+    </script>
+    
+</body>
+</html>

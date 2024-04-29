@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Store Revenue</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='plotly-latest.min.js') }}"></script>
+</head>
+<body>
+    <!-- Plot container for the store revenue graph -->
+    <div class="plot-container">
+        <div id="store-revenue-graph"></div>
+    </div>
+
+    <!-- Plot container for the units sold by category graph -->
+    <div class="plot-container">
+        <div id="units-sold-graph"></div>
+    </div>
+
+    <script>
+        // Plot the store revenue graph
+        var revenueData = {{ revenue_graph_data | safe }};
+        var revenueLayout = {
+            title: 'Store Revenue by Product',
+            xaxis: { title: 'Product Name' },
+            yaxis: { title: 'Revenue Generated' }
+        };
+        Plotly.newPlot('store-revenue-graph', revenueData, revenueLayout);
+
+        // Plot the units sold by category graph
+        var unitsData = {{ units_graph_data | safe }};
+        var unitsLayout = {
+            title: 'Units Sold by Product Category',
+            xaxis: { title: 'Category Name' },
+            yaxis: { title: 'Units Sold' }
+        };
+        Plotly.newPlot('units-sold-graph', unitsData, unitsLayout);
+    </script>
+</body>
+</html>

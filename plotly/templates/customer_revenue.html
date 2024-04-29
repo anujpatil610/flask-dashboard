@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Revenue</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='plotly-latest.min.js') }}"></script>
+</head>
+<body>
+    <!-- Plot container for the customer revenue graph -->
+    <div class="plot-container">
+        <div id="customer-revenue-graph"></div>
+    </div>
+
+    <!-- Plot container for the category revenue graph -->
+    <div class="plot-container">
+        <div id="category-revenue-graph"></div>
+    </div>
+
+    <script>
+        // Plot the customer revenue graph
+        var customerGraphData = {{ store_data | safe }};
+        
+        // Define the layout for the customer revenue graph
+        var customerLayout = {
+            title: 'Customer Revenue by Store',
+            xaxis: {
+                title: 'Store ID'
+            },
+            yaxis: {
+                title: 'Revenue Generated'
+            }
+        };
+    
+        // Render the customer revenue plot with the data and layout
+        Plotly.newPlot('customer-revenue-graph', customerGraphData, customerLayout);
+
+        // Plot the category revenue graph
+        var categoryGraphData = {{ category_data | safe }};
+        
+        // Define the layout for the category revenue graph
+        var categoryLayout = {
+            title: 'Revenue by Category and Revenue Source Type',
+            xaxis: {
+                title: 'Category Name and Revenue Source Type'
+            },
+            yaxis: {
+                title: 'Revenue Generated'
+            },
+            barmode: 'group'
+        };
+    
+        // Render the category revenue plot with the data and layout
+        Plotly.newPlot('category-revenue-graph', categoryGraphData, categoryLayout);
+    </script>
+</body>
+</html>
