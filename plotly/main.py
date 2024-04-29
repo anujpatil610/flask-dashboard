@@ -12,7 +12,7 @@ app = Flask(__name__, static_url_path='')
 db_config = {
     'host': os.environ.get('DB_HOST', 'mysql.clarksonmsda.org'),
     'user': os.environ.get('DB_USER', 'anpatil'),
-    'passwd': os.environ.get('DB_PASS', 'H3ADSHOT'),  
+    'passwd': os.environ.get('DB_PASS', 'pass'),  
     'db': os.environ.get('DB_NAME', 'anpatil_zagimore_datawarehouse'),
     'autocommit': True
 }
